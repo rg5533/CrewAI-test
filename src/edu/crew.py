@@ -1,5 +1,7 @@
+import os
 from crewai import Agent, Crew, Process, Task, LLM
 from crewai.project import CrewBase, agent, crew, task
+from dotenv import load_dotenv
 
 # Uncomment the following line to use an example of a custom tool
 # from edu.tools.custom_tool import MyCustomTool
@@ -7,11 +9,22 @@ from crewai.project import CrewBase, agent, crew, task
 # Check our tools documentations for more information on how to use them
 # from crewai_tools import SerperDevTool
 
-perplexity_llm = LLM(
-    model="perplexity/llama-3.1-sonar-small-128k-online",
-    base_url="https://api.perplexity.ai/api/v1/chat/completions",
-    api_key="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"
+from crewai_tools import (
+    SerperDevTool,
 )
+
+load_dotenv()
+
+# Set up API keys
+os.environ["SERPER_API_KEY"] = os.getenv("SERPER_API_KEY")
+search_tool = SerperDevTool()
+
+# perplexity_llm = LLM(
+#     model="perplexity/llama-3.1-sonar-small-128k-online",
+#     base_url="https://api.perplexity.ai",
+#     api_key="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",
+#     endpoint="chat/completions"
+# )
 
 @CrewBase
 class Edu():
@@ -26,7 +39,8 @@ class Edu():
 			config=self.agents_config['researcher'],
 			# tools=[MyCustomTool()], # Example of custom tool, loaded on the beginning of file
 			verbose=True,
-			llm=perplexity_llm
+			tools=[search_tool],
+			# llm=perplexity_llm
 		)
 
 	@agent

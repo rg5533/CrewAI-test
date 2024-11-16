@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 import sys
 import warnings
-
+import os
+from dotenv import load_dotenv
 from edu.crew import Edu
 
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
@@ -10,7 +11,9 @@ warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 
 from langtrace_python_sdk import langtrace
 
-langtrace.init(api_key = '9581d0d32b648dc5fc508b7a3ca51adbf13ef99749c2ef3785918022e0694c22')
+load_dotenv()
+
+langtrace.init(api_key = os.getenv("LANGTRACE_API_KEY"))
 
 # This main file is intended to be a way for you to run your
 # crew locally, so refrain from adding unnecessary logic into this file.
@@ -22,7 +25,7 @@ def run():
     Run the crew.
     """
     inputs = {
-        'topic': 'AI LLMs'
+        'topic': 'Basics of how RAG works'
     }
     Edu().crew().kickoff(inputs=inputs)
 
